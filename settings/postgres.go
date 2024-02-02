@@ -11,6 +11,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// Singleton pattern
 var (
 	// Pdb *gorm.DB
 	db *sqlx.DB
@@ -28,6 +29,7 @@ func InitSqlDB() error {
 	// 使用 sqlx 链接数据库
 	if sql, err := sqlx.Connect("postgres", connectStr); err != nil {
 		zap.L().Error("sqlx connect:", zap.Error(err))
+
 		return err
 	} else {
 		db = sql
@@ -37,6 +39,10 @@ func InitSqlDB() error {
 	db.SetMaxIdleConns(config.MaxIdleConnect)
 	fmt.Println("Postgres initialized.......")
 	return nil
+}
+
+func GetDB() *sqlx.DB {
+	return db
 }
 
 func CloseDB() {

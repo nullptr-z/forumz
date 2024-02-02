@@ -17,24 +17,24 @@ import (
 func main() {
 	// 1. 加载配置
 	if err := settings.InitViperConfig(); err != nil {
-		fmt.Println("settings.Init", err)
+		fmt.Println("Failed initialized settings.InitViperConfig", err)
 		return
 	}
 	// 2. 初始化日志
 	if err := settings.InitLogger(); err != nil {
-		fmt.Println("settings.Init", err)
+		fmt.Println("Failed initialized settings.InitLogger", err)
 		return
 	}
 	defer zap.L().Sync() // 退出时缓冲区的日志都刷到磁盘里
 	// 3. 初始化 Sql DB
 	if err := settings.InitSqlDB(); err != nil {
-		fmt.Println("settings.Init", err)
+		fmt.Println("Failed initialized settings.InitSqlDB", err)
 		return
 	}
 	defer settings.CloseDB()
 	// 4. 初始化 Redis
 	if err := settings.InitRedis(); err != nil {
-		fmt.Println("settings.Init", err)
+		fmt.Println("Failed initialized settings.InitRedis", err)
 		return
 	}
 	defer settings.CloseRedis()

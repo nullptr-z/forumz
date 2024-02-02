@@ -8,20 +8,26 @@ import (
 
 var snowf *snowflake.Node
 
-func Init(startTime string, machineId int64) (err error) {
+// func InitSnowflake(startTime string, machineId int64) (err error) {
+func init() {
 	// Create a new Node with a Node number of 1
-	snowf, err = snowflake.NewNode(machineId)
-	return
+	snowf, _ = snowflake.NewNode(10)
 }
 
 // Generate a snowflake ID.
-func GetId() (id snowflake.ID) {
+func GetId() (id int64) {
+	id = snowf.Generate().Int64()
+	fmt.Println("id:", id)
+	return
+}
+
+func getId() (id snowflake.ID) {
 	id = snowf.Generate()
 	return
 }
 
 func main() {
-	id := GetId()
+	id := getId()
 	// Print out the ID in a few different ways.
 	fmt.Printf("Int64  ID: %d\n", id)
 	fmt.Printf("String ID: %s\n", id)

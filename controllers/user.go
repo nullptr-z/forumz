@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nullptr-z/forumz/dao"
 	"github.com/nullptr-z/forumz/entity"
 	"github.com/nullptr-z/forumz/logic"
 	"go.uber.org/zap"
@@ -17,11 +18,15 @@ import (
 // @Router /user/getByName [get]
 func GetByNameHandler(g *gin.Context) {
 	// 获取参数
-	param := g.PostForm("name")
-	fmt.Println("param:", param)
-	// 参数校验
+	param := g.Query("name")
+	user, err := dao.QueryUserByName(param)
+	if err != nil {
+		zap.L().Info("QueryUserByName", zap.Error(err))
+		g.JSON(http.StatusOK, gin.H{"msg": []string{"Not found user", err.Error()}})
+		return
+	}
 	// 响应结果
-	g.JSON(http.StatusOK, gin.H{"message": ""})
+	g.JSON(http.StatusOK, gin.H{"success": true, "data": user})
 }
 
 // @Summary register User
@@ -33,22 +38,26 @@ func GetByNameHandler(g *gin.Context) {
 // @Router /user/register [post]
 func RegisterHandler(g *gin.Context) {
 	var user entity.User
-	// var salt = string(rand.Intn(10) * 1000)
 	// 1.获取参数
 	var repwd = g.PostForm("repassword")
-	if err := g.ShouldBind(&user); err != nil || repwd != user.Password {
-		zap.L().Error("ShouldBind to User", zap.Error(err))
-		g.JSON(http.StatusBadRequest, gin.H{"msg": []string{"Wrong parameters", err.Error()}})
+	if err := g.ShouldBind(&user); err != nil {
+		zap.L().Info("ShouldBind to User", zap.Error(err))
+		g.JSON(http.StatusBadRequest, gin.H{"msg": []string{"Wrong parameters"}})
 		return
 	}
 	// 1.1校验参数
-	// if len(user.Password) == 0 || repwd != user.Password {
-	// 	zap.L().Error("Validate failed password", zap.Strings("password", []string{user.Password, repwd}))
-	// 	g.JSON(http.StatusBadRequest, gin.H{"msg": "Validate failed password"})
-	// 	return
-	// }
+	if len(user.Password) == 0 || repwd != user.Password {
+		// zap.L().Info("Password with repassword not equal")
+		g.JSON(http.StatusBadRequest, gin.H{"msg": []string{"Password with repassword not equal"}})
+		return
+	}
 	// 2.处理业务逻辑
-	logic.Register(&user)
+	if err := logic.Register(&user); err != nil {
+		fmt.Println("err:", err)
+		zap.L().Error("Register failed", zap.Error(err))
+		g.JSON(http.StatusBadRequest, gin.H{"msg": []string{"Register failed user existed", err.Error()}})
+		return
+	}
 	// 3.响应
-	g.JSON(200, gin.H{"msg": "Register user success", "success": true})
+	g.JSON(http.StatusOK, gin.H{"msg": "Register user success", "success": true})
 }

@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/nullptr-z/forumz/dao"
 	_ "github.com/nullptr-z/forumz/docs"
 	"github.com/nullptr-z/forumz/settings"
 
@@ -13,6 +14,7 @@ import (
 func Setup() *gin.Engine {
 	g := gin.New()
 	g.Use(gin.Logger(), gin.Recovery(), settings.LoggerFormateOutput)
+	dao.InitializeDao()
 
 	g.GET("/swagger/*any", swagger.WrapHandler(swge.Handler))
 	userRouter := g.Group("/user")
