@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nullptr-z/gin-template/router"
-	"github.com/nullptr-z/gin-template/settings"
+	"github.com/nullptr-z/forumz/router"
+	"github.com/nullptr-z/forumz/settings"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
@@ -25,7 +25,7 @@ func main() {
 		fmt.Println("settings.Init", err)
 		return
 	}
-	defer zap.L().Sync()
+	defer zap.L().Sync() // 退出时缓冲区的日志都刷到磁盘里
 	// 3. 初始化 Sql DB
 	if err := settings.InitSqlDB(); err != nil {
 		fmt.Println("settings.Init", err)

@@ -12,7 +12,7 @@ func InitViperConfig() (err error) {
 	viper.SetConfigName("config") // 配置文件名
 	viper.SetConfigType("yaml")   // 配置文件类型
 	if err = viper.ReadInConfig(); err != nil {
-		fmt.Sprintf("reading config", err)
+		fmt.Println("reading config", err)
 		return
 	}
 	// 热加载配置

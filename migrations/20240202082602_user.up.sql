@@ -4,7 +4,7 @@
 CREATE TYPE forum.gender AS ENUM('unknown', 'man', 'woman');
 
 CREATE TABLE forum."user"(
-  id BIGSERIAL NOT NULL,
+  id BIGINT NOT NULL,
   user_id BIGINT NOT NULL,
   username VARCHAR(64) NOT NULL,
   password VARCHAR(64) NOT NULL,
