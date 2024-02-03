@@ -27,6 +27,7 @@ func ResponseError(g *gin.Context, code RespCodeType, msg ...any) {
 	var msgarr = []string{code.getMsg()}
 	for _, arg := range msg {
 		switch v := arg.(type) {
+
 		case string:
 			msgarr = append(msgarr, v)
 		}
