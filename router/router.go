@@ -23,22 +23,18 @@ func Setup() *gin.Engine {
 
 	g.GET("/swagger/*any", swagger.WrapHandler(swge.Handler))
 	g.GET("/auth", middleware.Authorization)
+	// 用户
 	userRouter := g.Group("/user")
 	{
-		userRouter.POST("/register", controllers.RegisterHandler)
 		userRouter.GET("/getByName", controllers.GetByNameHandler)
 		userRouter.POST("/login", controllers.LoginHandler)
-		// userRouter.GET("/list", handler.GetUserList)
-		// userRouter.GET("/create", handler.CreateUser)
-		// userRouter.GET("/delete", handler.DeleteUser)
-		// userRouter.POST("/update", handler.UpdateUser)
-		// userRouter.GET("/findByName", handler.FindUserByName)
-		// userRouter.GET("/sendMsg", handler.SendMessage)
-		// userRouter.GET("/getFriendsListById", handler.SearchFriendListById)
-		// userRouter.POST("/addFriend", handler.AddFriends)
-
-		// userRouter.GET("/getById", handler.GetUserById)
-		// userRouter.GET("/delete", handler.DeleteUser)
+		userRouter.POST("/register", controllers.RegisterHandler)
+	}
+	// api/v1 版本
+	v1 := g.Group("/api/v1")
+	community := v1.Group("/community")
+	{
+		community.GET("/list", controllers.CommunityListHandler)
 	}
 
 	return g
