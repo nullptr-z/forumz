@@ -19,7 +19,8 @@ redis:
   pool_size: 30
 log:
   level: debug
-  filename: app_log.log
+  log_file: app_log.json
   max_size: 200
   max_age: 30
   max_backups: 7
+mode: release

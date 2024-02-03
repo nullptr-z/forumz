@@ -4,6 +4,7 @@ import (
 	"github.com/nullptr-z/forumz/dao"
 	_ "github.com/nullptr-z/forumz/docs"
 	"github.com/nullptr-z/forumz/settings"
+	"github.com/spf13/viper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nullptr-z/forumz/controllers"
@@ -12,6 +13,9 @@ import (
 )
 
 func Setup() *gin.Engine {
+	if viper.Get("mode") == gin.ReleaseMode {
+		gin.SetMode(gin.ReleaseMode) // 发布模式
+	}
 	g := gin.New()
 	g.Use(gin.Logger(), gin.Recovery(), settings.LoggerFormateOutput)
 	dao.InitializeDao()
@@ -21,12 +25,12 @@ func Setup() *gin.Engine {
 	{
 		userRouter.POST("/register", controllers.RegisterHandler)
 		userRouter.GET("/getByName", controllers.GetByNameHandler)
+		userRouter.POST("/login", controllers.LoginHandler)
 		// userRouter.GET("/list", handler.GetUserList)
 		// userRouter.GET("/create", handler.CreateUser)
 		// userRouter.GET("/delete", handler.DeleteUser)
 		// userRouter.POST("/update", handler.UpdateUser)
 		// userRouter.GET("/findByName", handler.FindUserByName)
-		// userRouter.POST("/login", handler.Login)
 		// userRouter.GET("/sendMsg", handler.SendMessage)
 		// userRouter.GET("/getFriendsListById", handler.SearchFriendListById)
 		// userRouter.POST("/addFriend", handler.AddFriends)

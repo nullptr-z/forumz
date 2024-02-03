@@ -28,3 +28,10 @@ func CreateUser(user *entity.User) error {
 	_, err := sq.Exec(sqlStr, user.UserId, user.Username, user.Password)
 	return err
 }
+
+// func LoginUser(name string) (entity.User, error) {
+// 	var user entity.User
+// 	sqlStr := `select * from forum.user where username = $1`
+// 	err := sq.Get(&user, sqlStr, name)
+// 	return user, err
+// }

@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,6 +9,8 @@ import (
 	"github.com/nullptr-z/forumz/logic"
 	"go.uber.org/zap"
 )
+
+const ShouldBindByUser = "ShouldBind by user"
 
 // @Summary get User by name
 // @Tags 用户
@@ -22,7 +23,8 @@ func GetByNameHandler(g *gin.Context) {
 	user, err := dao.QueryUserByName(param)
 	if err != nil {
 		zap.L().Info("QueryUserByName", zap.Error(err))
-		g.JSON(http.StatusOK, gin.H{"msg": []string{"Not found user", err.Error()}})
+		// g.JSON(http.StatusOK, gin.H{"msg": []string{"Not found user", err.Error()}})
+		ResponseError(g, CodeUserNotExists)
 		return
 	}
 	// 响应结果
@@ -41,8 +43,8 @@ func RegisterHandler(g *gin.Context) {
 	// 1.获取参数
 	var repwd = g.PostForm("repassword")
 	if err := g.ShouldBind(&user); err != nil {
-		zap.L().Info("ShouldBind to User", zap.Error(err))
-		g.JSON(http.StatusBadRequest, gin.H{"msg": []string{"Wrong parameters"}})
+		zap.L().Info(ShouldBindByUser, zap.Error(err))
+		ResponseErrorWithMsg(g, CodeValidateParams, []string{"Wrong parameters"})
 		return
 	}
 	// 1.1校验参数
@@ -53,11 +55,37 @@ func RegisterHandler(g *gin.Context) {
 	}
 	// 2.处理业务逻辑
 	if err := logic.Register(&user); err != nil {
-		fmt.Println("err:", err)
 		zap.L().Error("Register failed", zap.Error(err))
-		g.JSON(http.StatusBadRequest, gin.H{"msg": []string{"Register failed user existed", err.Error()}})
+		ResponseErrorWithMsg(g, CodeUserExists, []string{"Register failed user existed"})
 		return
 	}
 	// 3.响应
 	g.JSON(http.StatusOK, gin.H{"msg": "Register user success", "success": true})
+}
+
+// @Summary Login User
+// @Tags 用户
+// @Param name formData string true "用户姓名"
+// @Param password formData string false "密码"
+// @Success 200 {string} json{code, success ,msg}
+// @Router /user/login [post]
+func LoginHandler(g *gin.Context) {
+	var user entity.User
+	// 1.获取参数
+	if err := g.ShouldBind(&user); err != nil {
+		zap.L().Info(ShouldBindByUser, zap.Error(err))
+		ResponseError(g, CodeValidPassword)
+		return
+	}
+	// 1.1校验参数
+
+	// 2.处理业务逻辑
+	if err := logic.Login(&user); err != nil {
+		zap.L().Error("Login failed", zap.String("username", user.Username), zap.Error(err))
+		// g.JSON(http.StatusBadRequest, gin.H{"msg": []string{"Login failed", err.Error()}})
+		ResponseError(g, CodeUserNotExists, "Login failed", err.Error())
+		return
+	}
+	// 3.响应
+	ResponseSuccess(g, nil, "Login user", user.Username)
 }

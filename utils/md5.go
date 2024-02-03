@@ -3,8 +3,6 @@ package utils
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"fmt"
-	"math/rand"
 	"strings"
 )
 
@@ -22,7 +20,6 @@ func MD5Encode(str string) string {
 }
 
 // 加密
-
 func CryptoPassword(pwd, salt string) string {
 	return Md5Encode(pwd + salt)
 }
@@ -30,19 +27,15 @@ func CryptoPassword(pwd, salt string) string {
 // 验证密码
 func ValidPassword(pwd, salt string, source_pwd string) bool {
 	code := Md5Encode(pwd + salt)
-	fmt.Println("code:", code)
-	fmt.Println("source_pwd:", source_pwd)
 	return code == source_pwd
 }
 
-var salt = string(rand.Intn(10) * 1010)
+var salt = string(1010)
 
 func CryptoPasswordDefaultSalt(pwd string) string {
 	return Md5Encode(pwd + salt)
 }
 func ValidPasswordDefaultSalt(pwd, source_pwd string) bool {
 	code := Md5Encode(pwd + salt)
-	fmt.Println("code:", code)
-	fmt.Println("source_pwd:", source_pwd)
 	return code == source_pwd
 }

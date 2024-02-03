@@ -7,16 +7,26 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
 func InitLogger() error {
-	// 构建一个生产环境下推荐使用的配置
-	config := zap.NewProductionConfig()
+	mode := viper.Get("mode")
+	logFilePath := fmt.Sprint(viper.Get("log.log_file"))
+	var config zap.Config
+	if mode == gin.DebugMode {
+		// 开发模式下的配置
+		config = zap.NewDevelopmentConfig()
+		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder // 在开发模式下，使用彩色来区分不同级别的日志
+	} else {
+		// 构建一个生产环境下推荐使用的配置
+		config = zap.NewProductionConfig()
+	}
 	config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder // 修改日志时间格式为ISO8601
 	config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)          // 设置日志级别，例如Debug级别
-	config.OutputPaths = []string{"app_log.json"}                // 设置文件作为日志输出目标
+	config.OutputPaths = []string{logFilePath}                   // 设置文件作为日志输出目标
 
 	// 创建Logger实例
 	logger, err := config.Build()
