@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/nullptr-z/forumz/controllers/middleware"
 	"github.com/nullptr-z/forumz/dao"
 	_ "github.com/nullptr-z/forumz/docs"
 	"github.com/nullptr-z/forumz/settings"
@@ -21,6 +22,7 @@ func Setup() *gin.Engine {
 	dao.InitializeDao()
 
 	g.GET("/swagger/*any", swagger.WrapHandler(swge.Handler))
+	g.GET("/auth", middleware.Authorization)
 	userRouter := g.Group("/user")
 	{
 		userRouter.POST("/register", controllers.RegisterHandler)

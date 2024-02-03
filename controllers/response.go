@@ -33,7 +33,7 @@ func ResponseError(g *gin.Context, code RespCodeType, msg ...any) {
 	}
 	rsp := &ResponseData{
 		Code: code,
-		Msg:  code.getMsg(),
+		Msg:  msgarr,
 		Data: nil,
 	}
 

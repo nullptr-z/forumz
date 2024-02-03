@@ -44,7 +44,7 @@ func RegisterHandler(g *gin.Context) {
 	var repwd = g.PostForm("repassword")
 	if err := g.ShouldBind(&user); err != nil {
 		zap.L().Info(ShouldBindByUser, zap.Error(err))
-		ResponseErrorWithMsg(g, CodeValidateParams, []string{"Wrong parameters"})
+		ResponseErrorWithMsg(g, CodeInvalidParams, []string{"Wrong parameters"})
 		return
 	}
 	// 1.1校验参数
@@ -74,18 +74,19 @@ func LoginHandler(g *gin.Context) {
 	// 1.获取参数
 	if err := g.ShouldBind(&user); err != nil {
 		zap.L().Info(ShouldBindByUser, zap.Error(err))
-		ResponseError(g, CodeValidPassword)
+		ResponseError(g, CodeInvalidPassword)
 		return
 	}
 	// 1.1校验参数
 
 	// 2.处理业务逻辑
-	if err := logic.Login(&user); err != nil {
+	token, err := logic.Login(&user)
+	if err != nil {
 		zap.L().Error("Login failed", zap.String("username", user.Username), zap.Error(err))
 		// g.JSON(http.StatusBadRequest, gin.H{"msg": []string{"Login failed", err.Error()}})
 		ResponseError(g, CodeUserNotExists, "Login failed", err.Error())
 		return
 	}
 	// 3.响应
-	ResponseSuccess(g, nil, "Login user", user.Username)
+	ResponseSuccess(g, map[string]string{"token": token}, "Login user", user.Username)
 }
