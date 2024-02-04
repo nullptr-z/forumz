@@ -53,6 +53,7 @@ func Setup() *gin.Engine {
 	v1 := g.Group("/api/v1")
 	community := v1.Group("/community")
 	{
+		community.GET("/:id", controllers.CommunityQueryByIdHandler)
 		community.GET("/list", controllers.CommunityListHandler)
 	}
 
