@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -36,7 +35,6 @@ func GenToken(userId int64, username string) (string, error) {
 func ParseTOken(tokenStr string) (*Claims, error) {
 	var claims = new(Claims)
 	token, err := jwt.ParseWithClaims(tokenStr, claims, func(t *jwt.Token) (interface{}, error) {
-		fmt.Println("t:", t)
 		return secret, nil
 	})
 	if err != nil {

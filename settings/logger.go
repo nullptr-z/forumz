@@ -73,6 +73,10 @@ func LoggerFormateOutput(g *gin.Context) {
 	statusCode := g.Writer.Status()
 	clientIP := g.ClientIP()
 
+	// body := prettyPrintJSON(requestBody)
+	fmt.Println("body:", requestBody.String())
+	fmt.Println("queryParams:", queryParams)
+
 	// 使用方括号[]格式化日志内容
 	zap.L().Info("requestDetails",
 		zap.String("method", g.Request.Method),
@@ -80,8 +84,8 @@ func LoggerFormateOutput(g *gin.Context) {
 		zap.Int("status", statusCode),
 		zap.String("latency", fmt.Sprintf("[%s]", latencyTime)),
 		zap.String("clientIP", fmt.Sprintf("[%s]", clientIP)),
-		zap.String("RequestArguments", fmt.Sprintf("[%s]", requestBody.String())),
-		zap.String("QueryParams", fmt.Sprintf("[%s]", queryParams)),
+		// zap.String("RequestArguments", fmt.Sprint("body:", requestBody.String())),
+		// zap.String("QueryParams", fmt.Sprintf("[%s]", queryParams)),
 		// zap.String("formData", fmt.Sprintf("[%s]", formData)),
 	)
 

@@ -3,9 +3,9 @@ package router
 import (
 	"net/http"
 
-	"github.com/nullptr-z/forumz/controllers/middleware"
 	"github.com/nullptr-z/forumz/dao"
 	_ "github.com/nullptr-z/forumz/docs"
+	"github.com/nullptr-z/forumz/middleware"
 	"github.com/nullptr-z/forumz/settings"
 	"github.com/spf13/viper"
 
@@ -50,11 +50,17 @@ func Setup() *gin.Engine {
 		userRouter.POST("/register", controllers.RegisterHandler)
 	}
 	// api/v1 版本
-	v1 := g.Group("/api/v1")
+	v1 := g.Group("/api/v1", middleware.Authorization)
+	// 社区
 	community := v1.Group("/community")
 	{
 		community.GET("/:id", controllers.CommunityQueryByIdHandler)
 		community.GET("/list", controllers.CommunityListHandler)
+	}
+	// 投票
+	post := v1.Group("/post")
+	{
+		post.POST("/vote", controllers.PostVoteHandler)
 	}
 
 	return g

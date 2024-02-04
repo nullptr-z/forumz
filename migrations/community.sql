@@ -6,7 +6,13 @@ VALUES
 (3, 'CS:GO', 'Rush B...', '2018-08-07 08:30:00', '2018-08-07 08:30:00'),
 (4, 'LOL', '欢迎来到英雄联盟!', '2016-01-01 08:00:00', '2016-01-01 08:00:00');
 
-SELECT * FROM "forum"."community" LIMIT 100;
+SELECT * FROM "forum"."community";
+
+SELECT * FROM "forum"."community" LIMIT 10 OFFSET 40;
+
+SELECT count(*) FROM "forum"."community";
+
+
 
 DELETE FROM forum.community
 WHERE id IN (

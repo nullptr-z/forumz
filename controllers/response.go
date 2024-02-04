@@ -20,7 +20,7 @@ response struct
 type ResponseData struct {
 	Code RespCodeType `json:"code"`
 	Msg  interface{}  `json:"msg"`
-	Data interface{}  `json:"data"`
+	Data interface{}  `json:"data,omitempty"`
 }
 
 func ResponseError(g *gin.Context, code RespCodeType, msg ...any) {

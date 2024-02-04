@@ -8,7 +8,14 @@ import (
 	"go.uber.org/zap"
 )
 
-var rds *redis.Client
+var (
+	rds *redis.Client
+	Nil = redis.Nil
+)
+
+func GetRedis() *redis.Client {
+	return rds
+}
 
 func InitRedis() error {
 

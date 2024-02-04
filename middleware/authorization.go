@@ -9,15 +9,6 @@ import (
 	"github.com/nullptr-z/forumz/pkg/jwt"
 )
 
-// 全局上下文可访问字段, 后续上文件中可以 g.Get(key) 可以直接获取
-var (
-	ContextUserIDKey = "userId"
-)
-
-func getUserId(g *gin.Context) string {
-	return g.MustGet(ContextUserIDKey).(string)
-}
-
 func Authorization(g *gin.Context) {
 	const bearerSchema = "Bearer "
 	// 从请求头提取 TOken
@@ -42,7 +33,7 @@ func Authorization(g *gin.Context) {
 		// Token 是有效的
 		fmt.Printf("解析token, User ID: %d, Username: %s\n", claims.UserId, claims.UserName)
 		// 将用户信息添加到请求的上下文中
-		g.Set(ContextUserIDKey, claims.UserId)
+		g.Set(controllers.ContextUserIDKey, claims.UserId)
 		g.Next() // 处理下一个请求
 	}
 }
