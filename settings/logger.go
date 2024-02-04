@@ -20,13 +20,22 @@ func InitLogger() error {
 		// 开发模式下的配置
 		config = zap.NewDevelopmentConfig()
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder // 在开发模式下，使用彩色来区分不同级别的日志
+
+		config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)  // 设置日志级别，例如Debug级别
+		config.OutputPaths = []string{logFilePath, "stderr"} // 设置文件作为日志输出目标,和标准错误输出作为日志输出目的地
+		// 自定义文件名和行号的输出格式
+		config.EncoderConfig.EncodeCaller = zapcore.ShortCallerEncoder
+		// 启用堆栈跟踪
+		config.EncoderConfig.StacktraceKey = "stacktrace"
+		// config.Encoding = "console" // 'json' or 'console'
 	} else {
+		fmt.Println("11111111111111111111111")
 		// 构建一个生产环境下推荐使用的配置
 		config = zap.NewProductionConfig()
+		config.OutputPaths = []string{logFilePath} // 设置文件作为日志输出目标,和标准错误输出作为日志输出目的地
+		// config.Level = zap.NewAtomicLevelAt(zap.InfoLevel) // 设置日志级别，例如Debug级别
 	}
 	config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder // 修改日志时间格式为ISO8601
-	config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)          // 设置日志级别，例如Debug级别
-	config.OutputPaths = []string{logFilePath}                   // 设置文件作为日志输出目标
 
 	// 创建Logger实例
 	logger, err := config.Build()
@@ -57,9 +66,9 @@ func LoggerFormateOutput(g *gin.Context) {
 		// 重新设置请求体，以供后续使用
 		g.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 	}
-	fmt.Println("request arguments:", requestBody.String())
 	queryParams := g.Request.URL.Query()
-	fmt.Println("query arguments:", queryParams)
+	// fmt.Println("request arguments:", requestBody.String())
+	// fmt.Println("query arguments:", queryParams)
 
 	// 处理请求
 	g.Next()
@@ -71,14 +80,15 @@ func LoggerFormateOutput(g *gin.Context) {
 	clientIP := g.ClientIP()
 
 	// 使用方括号[]格式化日志内容
-	zap.L().Info("request details",
+	zap.L().Info("requestDetails",
 		zap.String("method", g.Request.Method),
 		zap.String("uri", g.Request.RequestURI),
 		zap.Int("status", statusCode),
 		zap.String("latency", fmt.Sprintf("[%s]", latencyTime)),
 		zap.String("clientIP", fmt.Sprintf("[%s]", clientIP)),
-		zap.String("request arguments", fmt.Sprintf("[%s]", requestBody.String())),
-		zap.String("queryParams", fmt.Sprintf("[%s]", queryParams)),
+		zap.String("RequestArguments", fmt.Sprintf("[%s]", requestBody.String())),
+		zap.String("QueryParams", fmt.Sprintf("[%s]", queryParams)),
 		// zap.String("formData", fmt.Sprintf("[%s]", formData)),
 	)
+
 }

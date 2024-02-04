@@ -9,7 +9,7 @@ type User struct {
 	Id         int64          `form:"id"`
 	UserId     int64          `form:"userId" db:"user_id"`
 	Username   string         `form:"name" json:"username" binding:"required"`
-	Password   string         `form:"password" json:"password" binding:"required"`
+	Password   string         `form:"password" json:"-" binding:"required"`
 	Email      sql.NullString `form:"email" db:"email"`
 	Gender     Gender         `form:"gender" db:"gender"`
 	CreateTime time.Time      `db:"create_time"`

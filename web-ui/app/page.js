@@ -1,6 +1,8 @@
+import React from 'react';
+
 export default function Home() {
 
   return (
-    <div>the index</div>
+    <div>the Home</div>
   )
 }

@@ -8,11 +8,9 @@ export const metadata = {
   description: "Chat application developed based on go language",
 };
 
-
 export default function RootLayout({ children }) {
-
   return (
-    <html lang="en">
+    <html lang="en" >
       <body className={inter.className}>{children}</body>
     </html>
   );

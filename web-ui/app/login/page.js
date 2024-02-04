@@ -14,12 +14,11 @@ export default function Example() {
     const data = {
       // 使用 event.currentTarget 获取表单数据
       name: event.currentTarget.name.value,
-      pwd: event.currentTarget.password.value,
+      password: event.currentTarget.password.value,
     };
-    console.log("【 data 】==>", data);
-    let resp = await axios.postForm('/user/login', data, {})// withCredentials: true
-    if (resp.status == 200) {
-      router.push('/chatbox')
+    let resp = await axios.postForm('/user/login', data)// withCredentials: true
+    if (resp.code == 1000) {
+      router.push('/communit')
     }
     // 可以在此发送数据到服务器或进行其他处理
   };
@@ -55,11 +54,6 @@ export default function Example() {
               <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                 Password
               </label>
-              <div className="text-sm">
-                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                  Forgot password?
-                </a>
-              </div>
             </div>
             <div className="mt-2">
               <input
@@ -88,6 +82,12 @@ export default function Example() {
           <a href="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
             Register
           </a>
+
+          <div className="text-sm">
+            <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+              Forgot password?
+            </a>
+          </div>
         </p>
       </div>
     </div>

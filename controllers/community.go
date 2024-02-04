@@ -9,7 +9,7 @@ import (
 // @Summary Community List
 // @Description no parameter
 // @Tags 社区
-// @Router /community/list [get]
+// @Router /api/v1/community/list [get]
 // @Success 200 {string} json{code, success ,msg}
 func CommunityListHandler(g *gin.Context) {
 	// 查询所有社区，return [(id,name)]

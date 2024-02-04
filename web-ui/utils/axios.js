@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function initAxios() {
+export function initAxios() {
   axios.defaults.baseURL = 'http://127.0.0.1:8899';
   // axios.defaults.headers = { 'Content-Type': 'application/json' }
 
