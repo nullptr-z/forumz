@@ -18,6 +18,7 @@ export default function Example() {
     };
     let resp = await axios.postForm('/user/login', data)// withCredentials: true
     if (resp.code == 1000) {
+      localStorage.setItem("token", resp.data.token)
       router.push('/communit')
     }
     // 可以在此发送数据到服务器或进行其他处理

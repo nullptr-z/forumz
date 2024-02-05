@@ -19,8 +19,7 @@ var (
 
 func PostVote(userId, postId string, dire float64) (err error) {
 	// 从 Redis 取帖子发布的时间
-	key := redi.GetVoteKey(redi.KeyPostTimeZSet)
-	postTime := rds.ZScore(key, postId).Val()
+	postTime := rds.ZScore(redi.GetVoteKey(redi.KeyPostTimeZSet), postId).Val()
 	// 验证是否超过一周
 	if float64(time.Now().Unix())-postTime > period {
 		return ErrVoteTimeExpire
