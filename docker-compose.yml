@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  web-backend:
+    build: .
+    ports:
+      - "9999:8899"
+    depends_on:
+      - db01
+      - redis01
+    # environment:
+    #   DATABASE_URL: postgres://postgres:zz@db:5432
+
+  db01:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: zheng # 设置PostgreSQL的用户
+      POSTGRES_PASSWORD: zhengmr # 设置用户的密码
+      POSTGRES_DB: forum # 你可以在这里设置一个默认的数据库
+    ports:
+      - "5444:5432" # 将容器的5432端口映射到宿主机的指定端口
+    volumes:
+      - postgres-data:/var/lib/postgresql/data # 数据持久化
+  redis01:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+volumes:
+  postgres-data:

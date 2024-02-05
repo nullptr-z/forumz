@@ -27,6 +27,7 @@ func InitSqlDB() error {
 		config.User, config.Password, config.Host, config.Port)
 	// db, err := gorm.Open(postgres.Open(connectStr), &gorm.Config{})
 	// 使用 sqlx 链接数据库
+	fmt.Println("connectStr:", connectStr)
 	if sql, err := sqlx.Connect("postgres", connectStr); err != nil {
 		zap.L().Error("sqlx connect:", zap.Error(err))
 

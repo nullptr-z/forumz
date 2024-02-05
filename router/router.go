@@ -66,7 +66,7 @@ func Setup() *gin.Engine {
 	g.NoRoute(func(c *gin.Context) {
 		// 检查请求路径是否为API路径，如果不是，尝试返回首页
 		if !isAPIPath(c.Request.URL.Path) {
-			c.File("./web-ui/out" + c.Request.URL.Path) // 返回SPA的首页
+			c.File("./static" + c.Request.URL.Path) // 返回SPA的首页
 		} else {
 			// 可以返回404页面或者404 JSON响应
 			c.JSON(http.StatusNotFound, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})

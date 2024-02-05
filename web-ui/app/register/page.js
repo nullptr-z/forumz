@@ -15,8 +15,8 @@ export default function Example() {
     const data = {
       // 使用 event.currentTarget 获取表单数据
       name: event.currentTarget.name.value,
-      pwd: event.currentTarget.password.value,
-      repwd: event.currentTarget.repassword.value,
+      password: event.currentTarget.password.value,
+      repassword: event.currentTarget.repassword.value,
     };
     let resp = await axios.postForm('/user/register', data, {})// withCredentials: true
     if (resp.status == 200 && resp.data.success) {
