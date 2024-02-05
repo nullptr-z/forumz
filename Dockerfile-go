@@ -1,0 +1,32 @@
+# 使用Debian官方镜像作为基础镜像
+FROM debian:latest
+
+# 安装必需的软件包
+RUN apt-get update && \
+    apt-get install -y wget tar && \
+    rm -rf /var/lib/apt/lists/*
+
+# 安装Go
+# 你可能需要前往 https://golang.org/dl/ 查找最新的Go版本并更新下载链接
+ENV GO_VERSION 1.21.6
+
+RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
+    rm go${GO_VERSION}.linux-amd64.tar.gz
+
+# 设置Go环境变量
+ENV PATH=$PATH:/usr/local/go/bin \
+    GOPATH=/go \
+    GO111MODULE=on \
+    GOPROXY=https://goproxy.cn \
+    GOOS=linux \
+    GOARCH=amd64
+
+# 创建Go工作目录
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+
+# 设置工作目录
+WORKDIR $GOPATH
+
+# 为了支持更灵活的开发，你可以让容器启动后保持运行
+CMD ["tail", "-f", "/dev/null"]

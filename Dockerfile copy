@@ -1,5 +1,5 @@
 # 第三方 golang 运行环境的镜像
-FROM golang
+FROM debian:bullseye
 # 定义环境变量
 ENV GO111MODULE=on \
   GOPROXY=https://goproxy.cn \
