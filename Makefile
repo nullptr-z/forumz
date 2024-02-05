@@ -15,3 +15,7 @@ release:
 start:
 	@yarn --cwd web-ui dev
 
+build-web:
+	@yarn --cwd web-ui build
+
+

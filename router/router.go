@@ -1,16 +1,16 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
+	"github.com/nullptr-z/forumz/controllers"
 	"github.com/nullptr-z/forumz/dao"
 	_ "github.com/nullptr-z/forumz/docs"
 	"github.com/nullptr-z/forumz/middleware"
 	"github.com/nullptr-z/forumz/settings"
 	"github.com/spf13/viper"
-
-	"github.com/gin-gonic/gin"
-	"github.com/nullptr-z/forumz/controllers"
 	swge "github.com/swaggo/files"
 	swagger "github.com/swaggo/gin-swagger"
 )
@@ -49,7 +49,7 @@ func Setup() *gin.Engine {
 		userRouter.POST("/login", controllers.LoginHandler)
 		userRouter.POST("/register", controllers.RegisterHandler)
 	}
-	// api/v1 版本
+	// // api/v1 版本
 	v1 := g.Group("/api/v1", middleware.Authorization)
 	// 社区
 	community := v1.Group("/community")
@@ -62,6 +62,22 @@ func Setup() *gin.Engine {
 	{
 		post.POST("/vote", controllers.PostVoteHandler)
 	}
+	// 静态界面加载
+	g.NoRoute(func(c *gin.Context) {
+		// 检查请求路径是否为API路径，如果不是，尝试返回首页
+		if !isAPIPath(c.Request.URL.Path) {
+			c.File("./web-ui/out" + c.Request.URL.Path) // 返回SPA的首页
+		} else {
+			// 可以返回404页面或者404 JSON响应
+			c.JSON(http.StatusNotFound, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
+		}
+	})
 
 	return g
+}
+
+func isAPIPath(url string) bool {
+	fmt.Println("url:", url)
+
+	return false
 }

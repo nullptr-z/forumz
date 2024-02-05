@@ -1,6 +1,7 @@
 docs
 node_modules
 yarn.lock
+static
 app
 forumz
 app_log.json
