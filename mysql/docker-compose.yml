@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:latest
+    MYSQL_ROOT_PASSWORD: zz
+    build: .
+    ports:
+      - "3306:3306"
+    # environment:
+    #   DATABASE_URL: postgres://postgres:zz@db:5432
+
+volumes:
+  postgres-data:

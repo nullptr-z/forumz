@@ -1,5 +1,5 @@
 # 第三方 golang 运行环境的镜像
-FROM golang
+FROM golang:latest
 # 定义环境变量
 ENV GO111MODULE=on \
   GOPROXY=https://goproxy.cn \
@@ -9,11 +9,11 @@ ENV GO111MODULE=on \
 WORKDIR /build
 # 将当前目录代码内容复制到容器中
 COPY . .
-# SQL
-
+# CLI
+# RUN go get -u github.com/swaggo/swag
 # 构建
-RUN go mod download
-RUN go build -o app .
+# RUN go mod download
+# RUN go build -o app .
 # 切换到目录,并把可执行文件复制过来
 # WORKDIR /dist
 # RUN cp /build/app .
@@ -22,4 +22,4 @@ RUN go build -o app .
 # 申明暴露到外面的端口，没有实际作用
 EXPOSE 8899
 # 在容器启动时运行 app
-CMD ["/build/app"]
+# CMD ["/build/app"]
